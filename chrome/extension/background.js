@@ -1,6 +1,6 @@
 const bluebird = require('bluebird');
 import * as MessagesActions from '../../app/actions/messages';
-var io = require('socket.io-client')('http://jurg.is:3030/');
+var io = require('socket.io-client')('https://developers.lv', {path: '/msks-server/socket.io'});
 
 global.Promise = bluebird;
 
@@ -28,7 +28,6 @@ const setBadge = (messages) => {
     }
 }
 
-var io = require('socket.io-client')('https://developers.lv', {path: '/msks-server/socket.io'});
 const emitSubscribe = (payload) => {
     io.emit('action', {type: 'server/SUBSCRIBE_TO_MESSAGES', payload: payload})
 }
