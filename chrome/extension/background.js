@@ -1,6 +1,6 @@
 const bluebird = require('bluebird');
 import * as MessagesActions from '../../app/actions/messages';
-var io = require('socket.io-client')('https://developers.lv', {path: '/msks-server/socket.io'});
+var io = require('socket.io-client')('https://developers.lv', {path: '/socket.io'});
 
 global.Promise = bluebird;
 
@@ -48,18 +48,25 @@ io.on('action', res => {
         // MessagesActions.addMessage(res.payload);
         let nickToLookAfter;
         chrome.storage.local.get('nick', store => {
-            if (store.nick && res.payload.new_val.text.indexOf(store.nick) >= 0) {
-                chrome.notifications.create('', {
-                    type: 'basic',
-                    iconUrl: './img/icon-48.png',
-                    title: 'From: ' + res.payload.new_val.from,
-                    message: res.payload.new_val.text
+            if (store.nick) {
+                var match = new RegExp(store.nick + ',|^' + store.nick + '+\\s|\\s+' + store.nick + '+\\s|' + store.nick + '+:', 'g');
+                var secondTry = new RegExp('('+ store.nick + ')+[\\-_:,]|^('+ store.nick + ')+\\s|\\s+('+ store.nick + ')+\\s|[\\-_:,\\s]+('+ store.nick +')+$', 'g')
+                console.log(store.nick, secondTry)
+                
+                console.log(res.payload.new_val.text.match(secondTry));
+                  
+                if(res.payload.new_val.text.match(secondTry)) {
+                    chrome.notifications.create('', {
+                        type: 'basic',
+                        iconUrl: './img/icon-48.png',
+                        title: 'From: ' + res.payload.new_val.from,
+                        message: res.payload.new_val.text
 
-                }, res => {
-                    // console.log(res);
-                })
-
+                    }, res => {
+                        // console.log(res);
+                    })
                 setBadge()
+                }
             }
         })
     }

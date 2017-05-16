@@ -5,7 +5,7 @@ import Messages from '../components/Messages';
 import * as MessagesActions from '../actions/messages';
 import style from './App.css';
 
-var io = require('socket.io-client')('https://developers.lv', {path: '/msks-server/socket.io'});
+var io = require('socket.io-client')('https://developers.lv', {path: '/socket.io'});
 
 io.emit('action', {type: 'server/SUBSCRIBE_TO_CHANNELS'})
 io.emit('action', {type: 'server/LOAD_MESSAGES', payload: {channelName: '#developerslv'}})
